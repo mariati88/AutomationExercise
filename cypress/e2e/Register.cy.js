@@ -1,13 +1,13 @@
 import { generateRandomEmail } from "../support/utils"
 
-describe('TC_REG-001 - Registrasi akun baru', () => {
-  it('User berhasil register', () => {
+describe('Registrasi akun baru', () => {
+    beforeEach(()=>{
+        cy.visit('https://automationexercise.com')
+        cy.get('.shop-menu > .nav > :nth-child(4)').click()
+    })
+  it('TC_REG_001 - Success register new account ', () => {
      const email = generateRandomEmail()
-    cy.visit('https://automationexercise.com')
-    
-    //klik menu sign up/login
-   cy.get('.shop-menu > .nav > :nth-child(4)').click()
-   
+
    //Isi nama dan email
    cy.get('[data-qa="signup-name"]').type('maria')
    cy.get('[data-qa="signup-email"]').type(email)
@@ -36,6 +36,14 @@ cy.writeFile('cypress/fixtures/userData.json', {
     email: email,
     password: 'password123'
 })
+it('TC_REG_002 - Failed register new account using invalid email ', () => {
+    cy.get('[data-qa="signup-name"]').type('maria')
+    cy.get('[data-qa="signup-email"]').type('test')
+    cy.get('[data-qa="signup-button"]').click() 
+    //cek apakah email dianggap tidak valid oleh browser
+    cy.get('[data-qa="signup-email"]').should(($input) => {
+    expect($input[0].checkValidity()).to.be.false
+})
 })
   })
- 
+  })
