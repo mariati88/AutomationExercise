@@ -36,14 +36,22 @@ cy.writeFile('cypress/fixtures/userData.json', {
     email: email,
     password: 'password123'
 })
+})
 it('TC_REG_002 - Failed register new account using invalid email ', () => {
     cy.get('[data-qa="signup-name"]').type('maria')
     cy.get('[data-qa="signup-email"]').type('test')
     cy.get('[data-qa="signup-button"]').click() 
-    //cek apakah email dianggap tidak valid oleh browser
+    //untuk pengecekan email valid atau tidak
     cy.get('[data-qa="signup-email"]').should(($input) => {
     expect($input[0].checkValidity()).to.be.false
 })
-})
+  })
+it('TC_REG_003 - Failed register new account using existing email ', () => {
+    cy.fixture('userData').then((user) => {
+    cy.get('[data-qa="signup-email"]').type(user.email)
+    cy.get('[data-qa="signup-name"]').type('test123')
+    cy.get('[data-qa="signup-button"]').click()
+    cy.contains('Email Address already exist!').should('be.visible')
+  })
   })
   })
